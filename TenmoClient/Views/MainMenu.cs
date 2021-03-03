@@ -1,4 +1,5 @@
 ﻿using MenuFramework;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,12 @@ namespace TenmoClient.Views
 {
     public class MainMenu : ConsoleMenu
     {
+        API_User user;
+        RestClient client;
+        public MainMenu(API_User user)
+        {
+            this.user = user;
 
-        public MainMenu()
-        { 
             AddOption("View your current balance", ViewBalance)
                 .AddOption("View your past transfers", ViewTransfers)
                 .AddOption("View your pending requests", ViewRequests)
@@ -19,6 +23,7 @@ namespace TenmoClient.Views
                 .AddOption("Log in as different user", Logout)
                 .AddOption("Exit", Exit);
         }
+
 
         
 
@@ -29,7 +34,8 @@ namespace TenmoClient.Views
 
         private MenuOptionResult ViewBalance()
         {
-            
+            RestRequest request = new RestRequest("account");
+            IRestResponse<Account> response = client.Get<Account>(request);
             return MenuOptionResult.WaitAfterMenuSelection;
         }
 

@@ -22,10 +22,11 @@ namespace TenmoClient.Views
 
         private MenuOptionResult Login()
         {
+            LoginUser loginUser = new LoginUser();
             API_User user = null;
             while (user == null)
             {
-                LoginUser loginUser = new LoginUser();
+                //LoginUser loginUser = new LoginUser();
                 loginUser.Username = GetString("Username: ", true);
                 if (loginUser.Username.Trim().Length == 0)
                 {
@@ -43,7 +44,7 @@ namespace TenmoClient.Views
             UserService.SetLogin(user);
 
             // User is logged in, show the main menu now.
-            return new MainMenu(UserService).Show(); //TODO UserService maybe add new constructor to menu
+            return new MainMenu(user).Show(); //TODO UserService maybe add new constructor to menu
         }
 
         private MenuOptionResult Register()

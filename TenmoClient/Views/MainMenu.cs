@@ -20,6 +20,8 @@ namespace TenmoClient.Views
                 .AddOption("Exit", Exit);
         }
 
+        
+
         protected override void OnBeforeShow()
         {
             Console.WriteLine($"TE Account Menu for User: {UserService.GetUserName()}");
@@ -27,7 +29,7 @@ namespace TenmoClient.Views
 
         private MenuOptionResult ViewBalance()
         {
-            Console.WriteLine("Not yet implemented!");
+            
             return MenuOptionResult.WaitAfterMenuSelection;
         }
 

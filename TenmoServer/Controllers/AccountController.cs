@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System;
@@ -9,29 +10,26 @@ using TenmoServer.DAO;
 using TenmoServer.Models;
 
 namespace TenmoServer.Controllers
-{
-    
-    //private IAccountDAO accountDAO;
-
-    //[Route("api/[controller]")] 
-    [Route("Account")]
+{ 
+    [Route("accounts")]
     [ApiController]
-
-    
-
     public class AccountController : ControllerBase
     {
-        //[HttpGet("{id}"]
-        //public Account ViewBalance()
-        //{
+        private IAccountDAO dao;
+        public AccountController(IAccountDAO dao)
+        {
+            this.dao = dao;
+        }
 
-        //    //User existingUser = IUserDAO.GetUser(userParam.Username);
-        //    //IRestRequest request = new RestRequest()
+        [HttpGet]
+        [Authorize]
+        public Account ViewBalance()
+        {
+            return dao.ViewBalance(User.Identity.Name);
+        } 
 
 
 
-        //}
-        
 
     }
 }

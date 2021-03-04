@@ -24,6 +24,7 @@ namespace TenmoClient.Views
         {
             LoginUser loginUser = new LoginUser();
             API_User user = null;
+            string ApiUrl = "https://localhost:44315/";
             while (user == null)
             {
                 //LoginUser loginUser = new LoginUser();
@@ -44,7 +45,7 @@ namespace TenmoClient.Views
             UserService.SetLogin(user);
 
             // User is logged in, show the main menu now.
-            return new MainMenu(user).Show(); //TODO UserService maybe add new constructor to menu
+            return new MainMenu(ApiUrl).Show(); //TODO UserService maybe add new constructor to menu
         }
 
         private MenuOptionResult Register()

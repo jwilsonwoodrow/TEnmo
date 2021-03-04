@@ -8,7 +8,7 @@ namespace TenmoServer.DAO
 {
     public interface IAccountDAO
     {
-        Account ViewBalance(int userId);
+        Account ViewBalance(string name);
 
     }
 }

@@ -7,6 +7,6 @@ namespace TenmoServer.DAO
 {
     public interface ITransferDAO
     {
-
+        void SendTEBucks(int senderid, int receiverid, decimal amount);
     }
 }

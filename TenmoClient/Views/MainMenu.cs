@@ -2,6 +2,7 @@
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
+using System.Collections.Generic;
 using TenmoClient.Data;
 namespace TenmoClient.Views
 {
@@ -57,7 +58,25 @@ namespace TenmoClient.Views
 
         private MenuOptionResult SendTEBucks()
         {
-            Console.WriteLine("Not yet implemented!");
+            RestRequest request = new RestRequest("user/userlist");
+            client.Authenticator = new JwtAuthenticator(UserService.GetToken());
+            IRestResponse<List<User>> response = client.Get<List<User>>(request);
+            foreach (User user in response.Data)
+            {
+                Console.WriteLine($"User ID: {user.UserId}   Username: {user.Username}");
+            }
+            Console.WriteLine("");
+            int receiverId = GetInteger("Enter ID of desired recipient, 0 to cancel");
+
+            if (receiverId == 0)
+            {
+                return MenuOptionResult.DoNotWaitAfterMenuSelection;
+            }
+
+            RestRequest request1 = new RestRequest("transfer/pay");
+            client.Authenticator = new JwtAuthenticator(UserService.GetToken());
+
+
             return MenuOptionResult.WaitAfterMenuSelection;
         }
 

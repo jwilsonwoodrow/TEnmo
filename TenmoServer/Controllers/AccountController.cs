@@ -15,30 +15,16 @@ namespace TenmoServer.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private IAccountDAO dao;
+        private IAccountDAO accountDao;
         public AccountController(IAccountDAO dao)
         {
-            this.dao = dao;
+            this.accountDao = dao;
         }
 
         /// <summary>
         /// get the current logged in users information and store it into a user
         /// </summary>
         /// <returns></returns>
-        //[HttpGet("accountinfo")]
-        //[Authorize]
-        //public User AccountExample()
-        //{
-        //    User newUser = new User();
-        //    string userName = User.Identity.Name;
-        //    bool isAdmin = User.IsInRole("Admin");
-        //    int userId = int.Parse(User.FindFirst("sub").Value);
-        //    newUser.Username = userName;
-        //    newUser.UserId = userId;
-
-        //    return newUser; 
-               
-        //}
 
         [HttpGet("balance")]
         [Authorize]
@@ -51,8 +37,9 @@ namespace TenmoServer.Controllers
             newUser.Username = userName;
             newUser.UserId = userId;
 
-            return dao.ViewBalance(newUser.UserId);   //User.Identity.Name);
+            return accountDao.ViewBalance(newUser.UserId);   //User.Identity.Name);
         } 
+
 
 
 

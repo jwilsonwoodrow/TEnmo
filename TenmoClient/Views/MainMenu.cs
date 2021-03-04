@@ -1,5 +1,6 @@
 ﻿using MenuFramework;
 using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using TenmoClient.Data;
 namespace TenmoClient.Views
@@ -12,6 +13,7 @@ namespace TenmoClient.Views
         {
             this.ApiUrl = ApiUrl;
             client = new RestClient(ApiUrl);
+            
             AddOption("View your current balance", ViewBalance)
                 .AddOption("View your past transfers", ViewTransfers)
                 .AddOption("View your pending requests", ViewRequests)
@@ -31,10 +33,13 @@ namespace TenmoClient.Views
 
         private MenuOptionResult ViewBalance()
         {
-            RestRequest request = new RestRequest("accounts");
+            RestRequest request = new RestRequest("accounts/balance");
+            client.Authenticator = new JwtAuthenticator(UserService.GetToken());
+
             IRestResponse<Account> response = client.Get<Account>(request);
+
             Account userAccount = response.Data;
-            Console.WriteLine($"Current Balance is {userAccount.Balance}");
+            Console.WriteLine($"Your Current Balance is {userAccount.Balance}");
             return MenuOptionResult.WaitAfterMenuSelection;
         }
 

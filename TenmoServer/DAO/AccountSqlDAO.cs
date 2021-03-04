@@ -20,15 +20,17 @@ namespace TenmoServer.DAO
         ViewBalance:
         **/
 
-        public Account ViewBalance(string username)
+        public Account ViewBalance( int userid)//string username)
         {
             //int userID = 
             Account newAccount = new Account();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select * from accounts a join users u on a.user_id = u.user_id where u.username = @username", conn);
-                cmd.Parameters.AddWithValue("@username", username);
+
+                //SqlCommand cmd = new SqlCommand("select * from accounts a join users u on a.user_id = u.user_id where u.username = @username", conn);
+                SqlCommand cmd = new SqlCommand("Select * from accounts where user_id = @userid", conn);
+                cmd.Parameters.AddWithValue("@userid", userid);      //"@username", username
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 while(reader.Read())
@@ -39,9 +41,6 @@ namespace TenmoServer.DAO
                 }
             }
             return newAccount;
-
         }
-
-
     }
 }

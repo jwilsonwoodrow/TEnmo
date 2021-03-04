@@ -11,7 +11,7 @@ using TenmoServer.Models;
 
 namespace TenmoServer.Controllers
 { 
-    [Route("accounts")]
+    [Route("accounts")] //localhost34334/accounts/balance
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -21,11 +21,37 @@ namespace TenmoServer.Controllers
             this.dao = dao;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// get the current logged in users information and store it into a user
+        /// </summary>
+        /// <returns></returns>
+        //[HttpGet("accountinfo")]
+        //[Authorize]
+        //public User AccountExample()
+        //{
+        //    User newUser = new User();
+        //    string userName = User.Identity.Name;
+        //    bool isAdmin = User.IsInRole("Admin");
+        //    int userId = int.Parse(User.FindFirst("sub").Value);
+        //    newUser.Username = userName;
+        //    newUser.UserId = userId;
+
+        //    return newUser; 
+               
+        //}
+
+        [HttpGet("balance")]
         [Authorize]
         public Account ViewBalance()
         {
-            return dao.ViewBalance(User.Identity.Name);
+            User newUser = new User();
+            string userName = User.Identity.Name;
+            bool isAdmin = User.IsInRole("Admin");
+            int userId = int.Parse(User.FindFirst("sub").Value);
+            newUser.Username = userName;
+            newUser.UserId = userId;
+
+            return dao.ViewBalance(newUser.UserId);   //User.Identity.Name);
         } 
 
 

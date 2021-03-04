@@ -19,14 +19,28 @@ namespace TenmoServer.Controllers
             this.transferDAO = dao;
         }
 
-        [HttpPut]
+        [HttpPut("update/sender/{id}")] //{amount}
+    
         [Authorize]
-        public void UpdateBalances()
+        public void UpdateSenderBalance(int id, decimal amount)
         {
+            transferDAO.UpdateSenderBalance(id, amount);
 
         }
 
+        [HttpPut("update/receiver/{id}")]
+
+        [Authorize]
+        public void UpdateReceiverBalance(int id, decimal amount)
+        {
+            transferDAO.UpdateSenderBalance(id, amount);
+
+        }
 
         [HttpPost]
+        public void CreatesTransferInDatabase(int senderid, int receiverid, decimal amount)
+        {
+            transferDAO.CreatesTransferInDatabase(senderid, receiverid, amount);
+        }
     }
 }

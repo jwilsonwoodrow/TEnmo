@@ -10,6 +10,8 @@ namespace TenmoClient.Views
     {
         string ApiUrl;
         RestClient client;
+
+        Account userAccount;
         public MainMenu(string ApiUrl)
         {
             this.ApiUrl = ApiUrl;
@@ -24,9 +26,6 @@ namespace TenmoClient.Views
                 .AddOption("Exit", Exit);
         }
 
-
-        
-
         protected override void OnBeforeShow()
         {
             Console.WriteLine($"TE Account Menu for User: {UserService.GetUserName()}");
@@ -39,7 +38,7 @@ namespace TenmoClient.Views
 
             IRestResponse<Account> response = client.Get<Account>(request);
 
-            Account userAccount = response.Data;
+            userAccount = response.Data;
             Console.WriteLine($"Your Current Balance is {userAccount.Balance}");
             return MenuOptionResult.WaitAfterMenuSelection;
         }
@@ -58,24 +57,39 @@ namespace TenmoClient.Views
 
         private MenuOptionResult SendTEBucks()
         {
-            RestRequest request = new RestRequest("user/userlist");
+            RestRequest userListRequest = new RestRequest("user/userlist");
             client.Authenticator = new JwtAuthenticator(UserService.GetToken());
-            IRestResponse<List<User>> response = client.Get<List<User>>(request);
-            foreach (User user in response.Data)
+            IRestResponse<List<User>> userListResponse = client.Get<List<User>>(userListRequest);
+            foreach (User user in userListResponse.Data)
             {
                 Console.WriteLine($"User ID: {user.UserId}   Username: {user.Username}");
             }
             Console.WriteLine("");
-            int receiverId = GetInteger("Enter ID of desired recipient, 0 to cancel");
+            int receiverId = GetInteger("Enter ID of desired recipient (Press 0 to cancel): ");
+            decimal amountToTransfer = GetDecimal("Enter Amount: ");
 
             if (receiverId == 0)
             {
                 return MenuOptionResult.DoNotWaitAfterMenuSelection;
             }
 
-            RestRequest request1 = new RestRequest("transfer/pay");
+            //Gets the current users balance 
+            RestRequest getBalanceRequest = new RestRequest("accounts/balance");
             client.Authenticator = new JwtAuthenticator(UserService.GetToken());
 
+            IRestResponse<Account> getBalanceResponse = client.Get<Account>(getBalanceRequest);
+
+            Account userAccount = getBalanceResponse.Data;
+            if (amountToTransfer > userAccount.Balance)
+            {
+                Console.WriteLine("You dont have enough money");
+                return MenuOptionResult.WaitAfterMenuSelection;
+            }
+
+            RestRequest updateSenderBalanceRequest = new RestRequest($"transfer/update/sender/{receiverId}/{amountToTransfer}");
+            client.Authenticator = new JwtAuthenticator(UserService.GetToken());
+
+            IRestResponse updateSenderBalanceResponse = client.Put(updateSenderBalanceRequest);
 
             return MenuOptionResult.WaitAfterMenuSelection;
         }

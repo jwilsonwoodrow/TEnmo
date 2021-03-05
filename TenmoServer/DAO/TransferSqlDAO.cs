@@ -43,6 +43,7 @@ namespace TenmoServer.DAO
 
         public void UpdateReceiverBalance(int receiverid, decimal amount)
         {
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -72,37 +73,29 @@ namespace TenmoServer.DAO
         public List<Transfer> ViewAllTransfers(User user) //we need the user id somehow
         {
             List<Transfer> listOfTransfers = new List<Transfer>();
-            try
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                conn.Open();
+                //see transactions
+                SqlCommand cmd = new SqlCommand("Select Distinct * from transfers where account_from = @userid or account_to = @userid", conn);
+                cmd.Parameters.AddWithValue("@userid", user.UserId);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    conn.Open();
-                    //see transactions
-                    SqlCommand cmd = new SqlCommand("Select Distinct * from transfers where account_from = @userid or account_to = @userid", conn);
-                    cmd.Parameters.AddWithValue("@userid", user.UserId);
-                    
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Transfer transferLog = new Transfer();
-                        transferLog.TransferId = Convert.ToInt32(reader["transfer_id"]);
-                        transferLog.TransferTypeID = Convert.ToInt32(reader["transfer_type_id"]);
-                        transferLog.TransferStatusID = Convert.ToInt32(reader["transfer_status_id"]);
-                        transferLog.AccountFrom = Convert.ToInt32(reader["account_from"]);
-                        transferLog.AccountTo = Convert.ToInt32(reader["account_to"]);
-                        transferLog.Amount = Convert.ToInt32(reader["amount"]);
-                        listOfTransfers.Add(transferLog);
-                    }
-                }            
+                    Transfer transferLog = new Transfer();
+                    transferLog.TransferId = Convert.ToInt32(reader["transfer_id"]);
+                    transferLog.TransferTypeID = Convert.ToInt32(reader["transfer_type_id"]);
+                    transferLog.TransferStatusID = Convert.ToInt32(reader["transfer_status_id"]);
+                    transferLog.AccountFrom = Convert.ToInt32(reader["account_from"]);
+                    transferLog.AccountTo = Convert.ToInt32(reader["account_to"]);
+                    transferLog.Amount = Convert.ToInt32(reader["amount"]);
+                    listOfTransfers.Add(transferLog);
+                }
             }
-            catch
-            {
 
-            }
             return listOfTransfers;
-
-
         }
 
         public TransferDetails GetTransferDetails(int transferid)
@@ -119,7 +112,7 @@ namespace TenmoServer.DAO
                     while (reader.Read())
                     {
                         details.TransferId = transferid;
-                        details.TransferType= Convert.ToString(reader["transfer_type_desc"]);
+                        details.TransferType = Convert.ToString(reader["transfer_type_desc"]);
                         details.StatusDesc = Convert.ToString(reader["transfer_status_desc"]);
                         UserSqlDAO dao = new UserSqlDAO(connectionString);
                         int fromId = Convert.ToInt16(reader["account_from"]);

@@ -39,8 +39,9 @@ namespace TenmoServer.DAO
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                conn.Open();
                 //writes the transfer to the database
-                SqlCommand cmd = new SqlCommand("insert into transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) values (@transferType, @transferStatus, @accountFrom, @accountTo, @amount", conn);
+                SqlCommand cmd = new SqlCommand("insert into transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) values (@transfer_type_id, @transfer_status_id, @account_from, @account_to, @amount)", conn);
                 cmd.Parameters.AddWithValue("@transfer_type_id", 2);
                 cmd.Parameters.AddWithValue("@transfer_status_id", 2);
                 cmd.Parameters.AddWithValue("@account_from", senderid);
@@ -54,6 +55,7 @@ namespace TenmoServer.DAO
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                conn.Open();
                 //update reciever balance
                 SqlCommand cmd = new SqlCommand("update accounts set balance = balance + @amount where account_id = @receiverid", conn);
                 cmd.Parameters.AddWithValue("@amount", amount);

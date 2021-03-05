@@ -36,7 +36,6 @@ namespace TenmoServer.Controllers
             int userId = int.Parse(User.FindFirst("sub").Value);
             newUser.Username = userName;
             newUser.UserId = userId;
-
             return accountDao.ViewBalance(newUser.UserId);   //User.Identity.Name);
         } 
 

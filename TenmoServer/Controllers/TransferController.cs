@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TenmoServer.DAO;
+using TenmoServer.Models;
 
 namespace TenmoServer.Controllers
 {
-    [Route("transfer")]
+    [Route("transfer/")]
     [ApiController]
     public class TransferController : ControllerBase
     {
@@ -19,28 +20,18 @@ namespace TenmoServer.Controllers
             this.transferDAO = dao;
         }
 
-        [HttpPut("update/sender/{id}")] //{amount}
-    
+        [HttpPut("{id}")] //{amount}
         [Authorize]
-        public void UpdateSenderBalance(int id, decimal amount)
+        public void UpdateSenderBalance(Transfer transfer)
         {
-            transferDAO.UpdateSenderBalance(id, amount);
-
-        }
-
-        [HttpPut("update/receiver/{id}")]
-
-        [Authorize]
-        public void UpdateReceiverBalance(int id, decimal amount)
-        {
-            transferDAO.UpdateSenderBalance(id, amount);
-
+            transferDAO.UpdateSenderBalance(transfer.AccountFrom, transfer.Amount);
+            transferDAO.UpdateReceiverBalance(transfer.AccountTo, transfer.Amount);
         }
 
         [HttpPost]
-        public void CreatesTransferInDatabase(int senderid, int receiverid, decimal amount)
+        public void CreatesTransferInDatabase(Transfer transfer)
         {
-            transferDAO.CreatesTransferInDatabase(senderid, receiverid, amount);
+            transferDAO.CreatesTransferInDatabase(transfer.AccountFrom, transfer.AccountTo, transfer.Amount);
         }
     }
 }

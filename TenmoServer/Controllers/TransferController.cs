@@ -42,10 +42,14 @@ namespace TenmoServer.Controllers
             User user = new User();
             user.UserId = int.Parse(User.FindFirst("sub").Value);
             return transferDAO.ViewAllTransfers(user);
-
-
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public TransferDetails GetTransferDetails(int id)
+        {
+            return transferDAO.GetTransferDetails(id);
+        }
 
     }
 }

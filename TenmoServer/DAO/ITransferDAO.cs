@@ -12,5 +12,6 @@ namespace TenmoServer.DAO
         void CreatesTransferInDatabase(int senderid, int receiverid, decimal amount);
         void UpdateReceiverBalance(int receiverid, decimal amount);
         void UpdateSenderBalance(int senderid, decimal amount);
+        TransferDetails GetTransferDetails(int transferid);
     }
 }

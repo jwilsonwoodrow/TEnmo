@@ -33,5 +33,19 @@ namespace TenmoServer.Controllers
         {
             transferDAO.CreatesTransferInDatabase(transfer.AccountFrom, transfer.AccountTo, transfer.Amount);
         }
+
+        [HttpGet]
+        [Authorize]
+
+        public List<Transfer> ViewAllTransfers()
+        {
+            User user = new User();
+            user.UserId = int.Parse(User.FindFirst("sub").Value);
+            return transferDAO.ViewAllTransfers(user);
+
+
+        }
+
+
     }
 }

@@ -38,5 +38,14 @@ namespace TenmoServer.Controllers
             return listOfUsersToDisplay;
 
         }
+
+        [HttpGet("{id}")]
+        [Authorize]
+
+        public User GetUserById(int id)
+        {
+           return userDao.GetUserByID(id);
+        }
+
     }
 }

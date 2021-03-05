@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TenmoServer.Models;
 
 namespace TenmoServer.DAO
 {
     public interface ITransferDAO
     {
-        void SendTEBucks(int senderid, int receiverid, decimal amount);
+        List<Transfer> ViewAllTransfers(User user);
         void CreatesTransferInDatabase(int senderid, int receiverid, decimal amount);
         void UpdateReceiverBalance(int receiverid, decimal amount);
         void UpdateSenderBalance(int senderid, decimal amount);
